@@ -1,0 +1,261 @@
+/* Anthropic Color Variables */
+:root {
+  --bg-cream: #faf9f5;
+  --text-dark: #141413;
+  --primary-coral: #d97757;
+  --secondary-blue: #6a9bcc;
+  --accent-olive: #788c5d;
+  --border-gray: #e8e6dc;
+  --subtle-gray: #b0aea5;
+}
+
+/* Page Setup for PDF */
+@page {
+  size: A4;
+  margin: 0;
+}
+
+/* Base Styles */
+html {
+  background-color: var(--bg-cream) !important;
+  background: var(--bg-cream) !important;
+}
+
+body {
+  background-color: var(--bg-cream) !important;
+  background: var(--bg-cream) !important;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Container Styles */
+.mx-auto.shadow-lg {
+  background-color: var(--bg-cream) !important;
+  min-height: 100% !important;
+}
+
+/* Prose/Content Styles */
+.prose {
+  max-width: none;
+  color: var(--text-dark);
+  background-color: var(--bg-cream);
+  min-height: 100% !important;
+}
+
+/* Print Media Styles */
+@media print {
+  html, body {
+    background-color: var(--bg-cream) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .prose {
+    background-color: var(--bg-cream) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+/* Typography */
+.prose p {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  font-family: Poppins, Arial, sans-serif;
+  color: var(--text-dark);
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose h1 {
+  color: var(--primary-coral);
+  border-bottom: 2px solid var(--primary-coral);
+  padding-bottom: 0.5rem;
+}
+
+.prose h2 {
+  color: var(--secondary-blue);
+}
+
+.prose h3 {
+  color: var(--accent-olive);
+}
+
+/* Links */
+.prose a {
+  color: var(--secondary-blue);
+  text-decoration: underline;
+}
+
+.prose a:hover {
+  color: var(--primary-coral);
+}
+
+/* Code Styles */
+.prose code {
+  background-color: var(--border-gray);
+  color: var(--text-dark);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-family: 'Courier New', monospace;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.prose pre {
+  background-color: var(--text-dark);
+  color: var(--bg-cream);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1em 0;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.prose pre code {
+  background-color: transparent;
+  color: var(--bg-cream);
+  padding: 0;
+}
+
+/* Blockquotes */
+.prose blockquote {
+  border-left: 4px solid var(--primary-coral);
+  color: var(--subtle-gray);
+  font-style: italic;
+  padding-left: 1rem;
+  margin: 1em 0;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* Text Formatting */
+.prose strong {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.prose em {
+  font-style: italic;
+}
+
+/* Horizontal Rule */
+.prose hr {
+  border: none;
+  border-top: 2px solid var(--border-gray);
+  margin: 2em 0;
+}
+
+/* Lists */
+.prose ul, .prose ol {
+  color: var(--text-dark);
+  margin: 1em 0;
+  padding-left: 2em;
+  list-style-position: outside;
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+.prose li {
+  margin: 0.5em 0;
+  display: list-item;
+}
+
+.prose li::marker {
+  color: var(--primary-coral);
+}
+
+.prose ul ul {
+  margin: 0.25em 0;
+  list-style-type: circle;
+}
+
+.prose ul ul ul {
+  list-style-type: square;
+}
+
+.prose ol ol {
+  margin: 0.25em 0;
+  list-style-type: lower-alpha;
+}
+
+.prose ol ol ol {
+  list-style-type: lower-roman;
+}
+
+/* Tables */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+  border: 1px solid var(--border-gray);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.prose table thead {
+  background-color: var(--border-gray);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.prose table th {
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-dark);
+  border: 1px solid var(--subtle-gray);
+  font-family: Poppins, Arial, sans-serif;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.prose table td {
+  padding: 0.75rem;
+  border: 1px solid var(--border-gray);
+  color: var(--text-dark);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.prose table tbody tr:nth-child(even) {
+  background-color: var(--bg-cream);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.prose table tbody tr:hover {
+  background-color: var(--border-gray);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* Images */
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1em 0;
+}
+
+/* Strikethrough */
+.prose del {
+  text-decoration: line-through;
+  color: var(--subtle-gray);
+}
