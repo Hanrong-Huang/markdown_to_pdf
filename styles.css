@@ -49,15 +49,25 @@ body {
 
 /* Print Media Styles */
 @media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
   html, body {
     background-color: var(--bg-cream) !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+    background: var(--bg-cream) !important;
   }
-  .prose {
+
+  .mx-auto.shadow-lg, .prose {
     background-color: var(--bg-cream) !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+    background: var(--bg-cream) !important;
+  }
+
+  @page {
+    background-color: var(--bg-cream);
+    background: #faf9f5;
   }
 }
 
@@ -65,6 +75,10 @@ body {
 .prose p {
   margin-top: 1em;
   margin-bottom: 1em;
+}
+
+.prose > *:first-child {
+  margin-top: 0 !important;
 }
 
 .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
@@ -252,10 +266,101 @@ body {
   height: auto;
   border-radius: 0.5rem;
   margin: 1em 0;
+  page-break-inside: avoid;
 }
 
 /* Strikethrough */
 .prose del {
   text-decoration: line-through;
   color: var(--subtle-gray);
+}
+
+/* Page Break Control */
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+.prose h1 {
+  page-break-before: auto;
+  break-before: auto;
+}
+
+.prose p {
+  orphans: 2;
+  widows: 2;
+}
+
+.prose pre {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.prose table {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.prose blockquote {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.prose img {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* Manual page break classes */
+.page-break-before {
+  page-break-before: always;
+  break-before: page;
+}
+
+.page-break-after {
+  page-break-after: always;
+  break-after: page;
+}
+
+.no-page-break {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* Page visualization - shows page boundaries in preview */
+@media screen {
+  .mx-auto.shadow-lg {
+    position: relative;
+    box-shadow: 0 0 0 1px var(--border-gray), 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .mx-auto.shadow-lg::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 277mm; /* 20mm top margin + 257mm content */
+    height: 2px;
+    background-image: repeating-linear-gradient(
+      90deg,
+      var(--primary-coral) 0,
+      var(--primary-coral) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* Visual page break indicators - standard A4 (297mm height, 20mm top/bottom margins = 257mm content) */
+  .prose {
+    position: relative;
+  }
+}
+
+/* Hide page break indicators in PDF */
+@media print {
+  .mx-auto.shadow-lg::after {
+    display: none !important;
+  }
 }

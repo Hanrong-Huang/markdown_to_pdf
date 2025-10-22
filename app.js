@@ -37,6 +37,7 @@ function greet(name) {
 
 > This is a blockquote.
 > It can span multiple lines.
+> Page break is shown in dashed line.
 
 ## Links
 
@@ -60,7 +61,11 @@ function MarkdownPdfEditor() {
       breaks: true,
       gfm: true,
       tables: true,
-      headerIds: false
+      headerIds: false,
+      pedantic: false,
+      sanitize: false,
+      smartLists: true,
+      smartypants: false
     });
   }, []);
 
@@ -72,33 +77,95 @@ function MarkdownPdfEditor() {
     if (!pdfRef.current) return;
 
     try {
-      const element = pdfRef.current;
+      // Get the prose element directly
+      const proseElement = pdfRef.current.querySelector('.prose');
+
+      // Store original padding
+      const originalPadding = proseElement.style.padding;
+
+      // Temporarily set padding to 0 so we can use html2pdf margins
+      proseElement.style.padding = '0';
+      proseElement.style.paddingLeft = '20mm';
+      proseElement.style.paddingRight = '20mm';
+
       const options = {
-        margin: 0,
+        margin: [20, 0, 20, 0], // Top and bottom margins in mm (left/right handled by padding)
         filename: `${filename || 'document'}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
+        image: {
+          type: 'jpeg',
+          quality: 0.98
+        },
         html2canvas: {
-          scale: 2,
+          scale: 2, // Standard quality
           useCORS: true,
           letterRendering: true,
-          backgroundColor: '#faf9f5'
+          backgroundColor: '#faf9f5',
+          logging: false,
+          windowWidth: 794, // 210mm at 96dpi
+          windowHeight: 1123, // 297mm at 96dpi
+          x: 0,
+          y: 0,
+          scrollX: 0,
+          scrollY: 0
         },
         jsPDF: {
           unit: 'mm',
           format: 'a4',
-          orientation: 'portrait'
+          orientation: 'portrait',
+          compress: true
         },
         pagebreak: {
           mode: ['avoid-all', 'css', 'legacy'],
           before: '.page-break-before',
-          after: '.page-break-after'
+          after: '.page-break-after',
+          avoid: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img', 'table', 'pre', 'blockquote']
         }
       };
 
-      await html2pdf().set(options).from(element).save();
+      // Generate PDF and add cream background to margins
+      const worker = html2pdf()
+        .set(options)
+        .from(proseElement)
+        .toPdf()
+        .get('pdf')
+        .then((pdf) => {
+          const totalPages = pdf.internal.getNumberOfPages();
+
+          // Add cream background to margins on all pages
+          for (let i = 1; i <= totalPages; i++) {
+            pdf.setPage(i);
+
+            // Set cream color (RGB for #faf9f5)
+            pdf.setFillColor(250, 249, 245);
+
+            // Fill margin areas with cream
+            // Top margin
+            pdf.rect(0, 0, 210, 20, 'F');
+            // Bottom margin
+            pdf.rect(0, 277, 210, 20, 'F');
+            // Left margin (from top to bottom)
+            pdf.rect(0, 0, 0, 297, 'F'); // 0 width, but we'll use left/right padding
+            // Right margin (from top to bottom)
+            pdf.rect(210, 0, 0, 297, 'F'); // 0 width, but we'll use left/right padding
+          }
+
+          return pdf;
+        });
+
+      const pdf = await worker;
+      pdf.save(`${filename || 'document'}.pdf`);
+
+      // Restore original padding
+      proseElement.style.padding = originalPadding;
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('PDF generation failed. Please try again.');
+
+      // Restore padding on error
+      const proseElement = pdfRef.current?.querySelector('.prose');
+      if (proseElement) {
+        proseElement.style.padding = '20mm';
+      }
     }
   };
 
@@ -172,9 +239,17 @@ function MarkdownPdfEditor() {
             type: 'text',
             value: filename,
             onChange: (e) => setFilename(e.target.value),
-            className: 'w-48 border px-3 py-2 rounded',
-            style: { backgroundColor: '#faf9f5', color: '#141413', borderColor: '#b0aea5' },
-            placeholder: 'Filename'
+            className: 'w-48 px-3 py-2 rounded-md font-medium',
+            style: {
+              backgroundColor: '#faf9f5',
+              color: '#141413',
+              border: '1.5px solid #e8e6dc',
+              fontFamily: 'Poppins, Arial, sans-serif',
+              outline: 'none'
+            },
+            placeholder: 'Filename',
+            onFocus: (e) => e.target.style.borderColor = '#d97757',
+            onBlur: (e) => e.target.style.borderColor = '#e8e6dc'
           }),
           React.createElement('input', {
             ref: fileInputRef,
@@ -185,19 +260,41 @@ function MarkdownPdfEditor() {
           }),
           React.createElement('button', {
             onClick: () => fileInputRef.current?.click(),
-            className: 'gap-2 px-4 py-2 border rounded hover:bg-gray-50',
-            style: { backgroundColor: '#faf9f5', color: '#788c5d', borderColor: '#788c5d' }
-          }, '📤 Upload'),
+            className: 'px-4 py-2 rounded-md font-medium transition-all',
+            style: {
+              backgroundColor: '#faf9f5',
+              color: '#141413',
+              border: '1.5px solid #e8e6dc',
+              fontFamily: 'Poppins, Arial, sans-serif'
+            },
+            onMouseEnter: (e) => e.target.style.borderColor = '#d97757',
+            onMouseLeave: (e) => e.target.style.borderColor = '#e8e6dc'
+          }, '↑ Upload'),
           React.createElement('button', {
             onClick: downloadMarkdown,
-            className: 'gap-2 px-4 py-2 border rounded hover:bg-gray-50',
-            style: { backgroundColor: '#faf9f5', color: '#6a9bcc', borderColor: '#6a9bcc' }
-          }, '💾 .md'),
+            className: 'px-4 py-2 rounded-md font-medium transition-all',
+            style: {
+              backgroundColor: '#faf9f5',
+              color: '#141413',
+              border: '1.5px solid #e8e6dc',
+              fontFamily: 'Poppins, Arial, sans-serif'
+            },
+            onMouseEnter: (e) => e.target.style.borderColor = '#d97757',
+            onMouseLeave: (e) => e.target.style.borderColor = '#e8e6dc'
+          }, '↓ .md'),
           React.createElement('button', {
             onClick: generatePdf,
-            className: 'gap-2 px-4 py-2 rounded text-white',
-            style: { backgroundColor: '#d97757', color: '#faf9f5' }
-          }, '📄 .pdf')
+            className: 'px-5 py-2 rounded-md font-medium transition-all',
+            style: {
+              backgroundColor: '#d97757',
+              color: '#faf9f5',
+              border: 'none',
+              fontFamily: 'Poppins, Arial, sans-serif',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            },
+            onMouseEnter: (e) => e.target.style.backgroundColor = '#c86847',
+            onMouseLeave: (e) => e.target.style.backgroundColor = '#d97757'
+          }, '↓ .pdf')
         )
       )
     ),
@@ -243,7 +340,12 @@ function MarkdownPdfEditor() {
           React.createElement('div', {
             ref: pdfRef,
             className: 'mx-auto shadow-lg',
-            style: { backgroundColor: '#faf9f5', width: '210mm', minHeight: '297mm' }
+            style: {
+              backgroundColor: '#faf9f5',
+              width: '210mm',
+              minHeight: '297mm',
+              boxSizing: 'border-box'
+            }
           },
             React.createElement('div', {
               className: 'prose',
@@ -251,7 +353,8 @@ function MarkdownPdfEditor() {
                 fontFamily: 'Lora, Georgia, serif',
                 padding: '20mm',
                 backgroundColor: '#faf9f5',
-                minHeight: '257mm'
+                minHeight: '257mm',
+                boxSizing: 'border-box'
               },
               dangerouslySetInnerHTML: { __html: htmlContent }
             })
