@@ -12,3 +12,6 @@ markdown-pdf-editor.html
 # Temporary files
 *.tmp
 *.log
+
+# Claude files
+.claude
