@@ -1,0 +1,17 @@
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Old bundled version
+markdown-pdf-editor.html
+
+# Temporary files
+*.tmp
+*.log
+
+# Claude files
+.claude

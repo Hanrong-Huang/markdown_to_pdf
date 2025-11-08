@@ -1,0 +1,597 @@
+/* Anthropic Color Variables */
+:root {
+  --bg-cream: #faf9f5;
+  --text-dark: #141413;
+  --primary-coral: #d97757;
+  --secondary-blue: #6a9bcc;
+  --accent-olive: #788c5d;
+  --border-gray: #e8e6dc;
+  --subtle-gray: #b0aea5;
+}
+
+/* Page Setup for PDF */
+@page {
+  size: A4;
+  margin: 0;
+}
+
+/* Base Styles */
+html {
+  background-color: var(--bg-cream) !important;
+  background: var(--bg-cream) !important;
+}
+
+body {
+  background-color: var(--bg-cream) !important;
+  background: var(--bg-cream) !important;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Container Styles */
+.mx-auto.shadow-lg {
+  background-color: var(--bg-cream) !important;
+  min-height: 100% !important;
+  background: var(--bg-cream) !important;
+}
+
+/* PDF Wrapper for full page background */
+.pdf-wrapper {
+  background-color: var(--bg-cream) !important;
+  background: var(--bg-cream) !important;
+  position: relative !important;
+  overflow: visible !important;
+  min-height: 297mm !important;
+}
+
+.pdf-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-cream) !important;
+  background: var(--bg-cream) !important;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Ensure wrapper covers full page in print */
+@media print {
+  .pdf-wrapper {
+    background-color: var(--bg-cream) !important;
+    background: var(--bg-cream) !important;
+    min-height: 297mm !important;
+    height: 297mm !important;
+    width: 210mm !important;
+    overflow: hidden !important;
+    page-break-after: always !important;
+  }
+
+  .pdf-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--bg-cream) !important;
+    background: var(--bg-cream) !important;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .pdf-wrapper:last-child {
+    page-break-after: auto !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html, body {
+    background-color: var(--bg-cream) !important;
+    background: var(--bg-cream) !important;
+  }
+
+  .mx-auto.shadow-lg, .prose {
+    background-color: var(--bg-cream) !important;
+    background: var(--bg-cream) !important;
+    min-height: 100% !important;
+  }
+
+  @page {
+    background-color: var(--bg-cream);
+    background: #faf9f5;
+    margin: 0;
+    size: A4;
+  }
+}
+
+/* Prose/Content Styles */
+.prose {
+  max-width: none;
+  color: var(--text-dark);
+  background-color: var(--bg-cream);
+  background: var(--bg-cream);
+  min-height: 100% !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* Print Media Styles */
+@media print {
+  .prose {
+    background-color: var(--bg-cream) !important;
+    background: var(--bg-cream) !important;
+    min-height: 100% !important;
+  }
+}
+
+/* Typography */
+.prose p {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.prose > *:first-child {
+  margin-top: 0 !important;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  font-family: Poppins, Arial, sans-serif;
+  color: var(--text-dark);
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose h1 {
+  color: var(--primary-coral);
+  border-bottom: 2px solid var(--primary-coral);
+  padding-bottom: 0.5rem;
+}
+
+.prose h2 {
+  color: var(--secondary-blue);
+}
+
+.prose h3 {
+  color: var(--accent-olive);
+}
+
+/* Links */
+.prose a {
+  color: var(--secondary-blue);
+  text-decoration: underline;
+}
+
+.prose a:hover {
+  color: var(--primary-coral);
+}
+
+/* Code Styles */
+.prose code {
+  background-color: #e8e6dc !important;
+  color: #141413;
+  padding: 4.8px 9.6px;
+  border-radius: 4.8px;
+  font-size: 0.875em;
+  font-family: 'Courier New', monospace;
+  vertical-align: baseline;
+  line-height: 1.5;
+  display: inline-block;
+  white-space: nowrap;
+  margin: 0 1.6px;
+  box-sizing: border-box;
+  position: relative;
+  top: 0.15em;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+.prose pre {
+  background-color: #141413 !important;
+  color: #faf9f5 !important;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1em 0;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+.prose pre code {
+  background-color: transparent !important;
+  color: #faf9f5 !important;
+  padding: 0;
+  display: block;
+  white-space: pre;
+  word-break: normal;
+  font-size: 0.875em;
+  line-height: 1.5;
+}
+
+/* Blockquotes */
+.prose blockquote {
+  border-left: 4px solid var(--primary-coral);
+  color: var(--subtle-gray);
+  font-style: italic;
+  padding-left: 1rem;
+  margin: 1em 0;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* Text Formatting */
+.prose strong {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.prose em {
+  font-style: italic;
+}
+
+/* Horizontal Rule */
+.prose hr {
+  border: none;
+  border-top: 2px solid var(--border-gray);
+  margin: 2em 0;
+}
+
+/* Lists */
+.prose ul, .prose ol {
+  color: var(--text-dark);
+  margin: 1em 0;
+  padding-left: 2em;
+  list-style-position: outside;
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+.prose li {
+  margin: 0.5em 0;
+  display: list-item;
+  line-height: 1.6;
+}
+
+/* Task list checkboxes - hide bullet point when checkbox is present */
+.prose li input[type="checkbox"] {
+  margin-right: 0.5em;
+  margin-left: -1.5em;
+  vertical-align: middle;
+  cursor: pointer;
+  width: 1em;
+  height: 1em;
+  accent-color: var(--primary-coral);
+}
+
+/* Hide list marker for list items containing checkboxes */
+.prose li:has(input[type="checkbox"]) {
+  list-style: none;
+}
+
+/* Hide marker for task list items using ::marker */
+.prose li:has(input[type="checkbox"])::marker {
+  content: '';
+  display: none;
+}
+
+/* Ensure proper spacing for task lists */
+.prose ul:has(li input[type="checkbox"]) {
+  padding-left: 1.5em;
+}
+
+.prose li::marker {
+  color: var(--primary-coral);
+}
+
+.prose ul ul {
+  margin: 0.25em 0;
+  list-style-type: circle;
+}
+
+.prose ul ul ul {
+  list-style-type: square;
+}
+
+.prose ol ol {
+  margin: 0.25em 0;
+  list-style-type: lower-alpha;
+}
+
+.prose ol ol ol {
+  list-style-type: lower-roman;
+}
+
+/* Tables */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+  border: 1px solid var(--border-gray);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.prose table thead {
+  background-color: var(--border-gray);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.prose table th {
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-dark);
+  border: 1px solid var(--subtle-gray);
+  font-family: Poppins, Arial, sans-serif;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.prose table td {
+  padding: 0.75rem;
+  border: 1px solid var(--border-gray);
+  color: var(--text-dark);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.prose table tbody tr:nth-child(even) {
+  background-color: var(--bg-cream);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.prose table tbody tr:hover {
+  background-color: var(--border-gray);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* Images */
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1em 0;
+  page-break-inside: avoid;
+}
+
+/* Strikethrough */
+.prose del {
+  text-decoration: line-through;
+  color: var(--subtle-gray);
+}
+
+/* Page Break Control */
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  page-break-after: avoid !important;
+  break-after: avoid !important;
+  page-break-before: avoid !important;
+  break-before: avoid !important;
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+.prose p {
+  orphans: 3 !important;
+  widows: 3 !important;
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+  page-break-after: auto !important;
+  break-after: auto !important;
+}
+
+.prose pre {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+  page-break-before: avoid !important;
+  break-before: avoid !important;
+  page-break-after: avoid !important;
+  break-after: avoid !important;
+}
+
+.prose table {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+  page-break-before: avoid !important;
+  break-before: avoid !important;
+  page-break-after: auto !important;
+  break-after: auto !important;
+}
+
+.prose blockquote {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+  page-break-before: avoid !important;
+  break-before: avoid !important;
+  page-break-after: auto !important;
+  break-after: auto !important;
+}
+
+.prose img {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+  page-break-before: avoid !important;
+  break-before: avoid !important;
+  page-break-after: auto !important;
+  break-after: auto !important;
+}
+
+.prose ul, .prose ol {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+  page-break-before: auto !important;
+  break-before: auto !important;
+  page-break-after: auto !important;
+  break-after: auto !important;
+}
+
+.prose li {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+.prose hr {
+  page-break-before: auto !important;
+  page-break-after: auto !important;
+  break-before: auto !important;
+  break-after: auto !important;
+}
+
+.prose a {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+/* Manual page break classes */
+.page-break-before {
+  page-break-before: always;
+  break-before: page;
+}
+
+.page-break-after {
+  page-break-after: always;
+  break-after: page;
+}
+
+.no-page-break {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* Page visualization - shows page boundaries in preview */
+@media screen {
+  .mx-auto.shadow-lg {
+    position: relative;
+    box-shadow: 
+      0 0 0 1px var(--border-gray), 
+      0 10px 30px rgba(0, 0, 0, 0.1),
+      /* Second page break */
+      57px 2303px 0 0 var(--primary-coral), /* 1180 + 1123 */
+      /* Third page break */
+      57px 3426px 0 0 var(--primary-coral), /* 2303 + 1123 */
+      /* Fourth page break */
+      57px 4549px 0 0 var(--primary-coral) !important; /* 3426 + 1123 */
+  }
+
+  /* First page break line - dashed */
+  .mx-auto.shadow-lg::after {
+    content: '';
+    position: absolute;
+    left: 57px;
+    right: 57px;
+    top: 1180px; /* Adjusted based on actual content break point */
+    height: 2px;
+    background-image: repeating-linear-gradient(
+      90deg,
+      var(--primary-coral) 0,
+      var(--primary-coral) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  .prose {
+    position: relative;
+  }
+}
+
+/* Hide page break indicators in PDF */
+@media print {
+  .mx-auto.shadow-lg::after,
+  .mx-auto.shadow-lg::before {
+    display: none !important;
+  }
+}
+
+/* Markdown Toolbar Styles */
+.toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: auto;
+  height: 28px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'Poppins', Arial, sans-serif;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  background-color: #ffffff;
+  color: #141413;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  white-space: nowrap;
+}
+
+.toolbar-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Simplified Anthropoc Button Styles */
+.btn-primary {
+  border-color: var(--secondary-blue);
+  color: var(--secondary-blue);
+}
+
+.btn-primary:hover {
+  background-color: var(--secondary-blue);
+  color: #ffffff;
+}
+
+.btn-secondary {
+  border-color: var(--accent-olive);
+  color: var(--accent-olive);
+}
+
+.btn-secondary:hover {
+  background-color: var(--accent-olive);
+  color: #ffffff;
+}
+
+.btn-accent {
+  border-color: var(--primary-coral);
+  color: var(--primary-coral);
+}
+
+.btn-accent:hover {
+  background-color: var(--primary-coral);
+  color: #ffffff;
+}
+
+/* Toolbar container responsive adjustments */
+@media (max-width: 768px) {
+  .toolbar-btn {
+    min-width: 28px;
+    height: 28px;
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+}
