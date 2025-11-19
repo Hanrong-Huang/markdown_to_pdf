@@ -526,35 +526,61 @@ body {
 
 /* Markdown Toolbar Styles */
 .quick-insert-wrapper {
-  background-color: #ffffff;
-  border: 1px solid var(--border-gray);
+  background: linear-gradient(135deg, rgba(217, 119, 87, 0.06), rgba(106, 155, 204, 0.08));
+  border: 1px solid rgba(176, 174, 165, 0.5);
   border-radius: 10px;
-  padding: 12px 16px;
+  padding: 14px 18px 18px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 10px 25px rgba(20, 20, 19, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.quick-insert-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  pointer-events: none;
 }
 
 .quick-insert-label {
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   letter-spacing: 0.08em;
-  color: var(--text-dark);
+  color: var(--subtle-gray);
   font-family: 'Poppins', Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+}
+
+.quick-insert-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(217, 119, 87, 0.4), transparent);
 }
 
 .quick-insert-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+  gap: 12px;
+  padding: 6px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(232, 230, 220, 0.6);
 }
 
 .quick-insert-divider {
   grid-column: 1 / -1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border-gray), transparent);
-  margin: 2px 0 6px;
+  background: linear-gradient(90deg, transparent, rgba(176, 174, 165, 0.8), transparent);
+  margin: 4px 0 2px;
 }
 
 .toolbar-btn {
@@ -563,16 +589,16 @@ body {
   justify-content: center;
   width: 100%;
   min-width: 0;
-  height: 34px;
-  padding: 4px 6px;
-  font-size: 11px;
+  height: 38px;
+  padding: 6px 8px;
+  font-size: 12px;
   font-weight: 600;
   font-family: 'Poppins', Arial, sans-serif;
   border-radius: 6px;
   border: 1px solid transparent;
   cursor: pointer;
   transition: all 0.15s ease-in-out;
-  background-color: #ffffff;
+  background-color: rgba(250, 249, 245, 0.9);
   color: #141413;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   white-space: nowrap;
@@ -587,12 +613,19 @@ body {
 .toolbar-btn:active {
   transform: translateY(0);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  filter: brightness(0.97);
+}
+
+.toolbar-btn:focus-visible {
+  outline: 2px solid var(--primary-coral);
+  outline-offset: 2px;
 }
 
 /* Simplified Anthropoc Button Styles */
 .btn-primary {
-  border-color: var(--secondary-blue);
-  color: var(--secondary-blue);
+  border-color: rgba(106, 155, 204, 0.6);
+  color: #3f5f83;
+  background: rgba(106, 155, 204, 0.15);
 }
 
 .btn-primary:hover {
@@ -601,8 +634,9 @@ body {
 }
 
 .btn-secondary {
-  border-color: var(--accent-olive);
-  color: var(--accent-olive);
+  border-color: rgba(120, 140, 93, 0.7);
+  color: #4f603a;
+  background: rgba(120, 140, 93, 0.16);
 }
 
 .btn-secondary:hover {
@@ -611,8 +645,9 @@ body {
 }
 
 .btn-accent {
-  border-color: var(--primary-coral);
-  color: var(--primary-coral);
+  border-color: rgba(217, 119, 87, 0.7);
+  color: #8f4226;
+  background: rgba(217, 119, 87, 0.18);
 }
 
 .btn-accent:hover {
@@ -623,11 +658,11 @@ body {
 /* Toolbar container responsive adjustments */
 @media (max-width: 768px) {
   .toolbar-btn {
-    height: 32px;
-    font-size: 10px;
+    height: 34px;
+    font-size: 11px;
   }
 
   .quick-insert-grid {
-    grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(52px, 1fr));
   }
 }
