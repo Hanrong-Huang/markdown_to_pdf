@@ -525,17 +525,50 @@ body {
 }
 
 /* Markdown Toolbar Styles */
+.quick-insert-wrapper {
+  background-color: #ffffff;
+  border: 1px solid var(--border-gray);
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
+}
+
+.quick-insert-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-dark);
+  font-family: 'Poppins', Arial, sans-serif;
+}
+
+.quick-insert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
+  gap: 10px;
+}
+
+.quick-insert-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-gray), transparent);
+  margin: 2px 0 6px;
+}
+
 .toolbar-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: auto;
-  height: 28px;
-  padding: 4px 8px;
-  font-size: 10px;
+  width: 100%;
+  min-width: 0;
+  height: 34px;
+  padding: 4px 6px;
+  font-size: 11px;
   font-weight: 600;
   font-family: 'Poppins', Arial, sans-serif;
-  border-radius: 4px;
+  border-radius: 6px;
   border: 1px solid transparent;
   cursor: pointer;
   transition: all 0.15s ease-in-out;
@@ -543,6 +576,7 @@ body {
   color: #141413;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .toolbar-btn:hover {
@@ -589,9 +623,11 @@ body {
 /* Toolbar container responsive adjustments */
 @media (max-width: 768px) {
   .toolbar-btn {
-    min-width: 28px;
-    height: 28px;
-    font-size: 11px;
-    padding: 3px 6px;
+    height: 32px;
+    font-size: 10px;
+  }
+
+  .quick-insert-grid {
+    grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
   }
 }
