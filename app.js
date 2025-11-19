@@ -404,139 +404,132 @@ function MarkdownPdfEditor() {
           }, 'Markdown Input')
         ),
         // Markdown Toolbar - Morandi Style
-        React.createElement('div', {
-          className: 'px-6 py-3 border-b',
-          style: { backgroundColor: 'var(--bg-cream)', borderBottomColor: 'var(--border-gray)' }
-        },
-          React.createElement('div', { className: 'flex items-center gap-1' },
-            React.createElement('span', {
-              className: 'text-xs font-semibold mr-3',
-              style: { color: 'var(--text-dark)', fontFamily: 'Poppins, Arial, sans-serif' }
-            }, 'QUICK INSERT'),
+          React.createElement('div', {
+            className: 'px-6 py-4 border-b',
+            style: { backgroundColor: 'var(--bg-cream)', borderBottomColor: 'var(--border-gray)' }
+          },
+            React.createElement('div', { className: 'quick-insert-wrapper' },
+              React.createElement('span', { className: 'quick-insert-label' }, 'QUICK INSERT'),
+              React.createElement('div', { className: 'quick-insert-grid' },
+                // Text Formatting - Blue
+                React.createElement('button', {
+                  onClick: () => insertMarkdown('**{text}**'),
+                  className: 'toolbar-btn btn-primary',
+                  title: 'Bold'
+                }, 'B'),
+                React.createElement('button', {
+                  onClick: () => insertMarkdown('*{text}*'),
+                  className: 'toolbar-btn btn-primary',
+                  title: 'Italic'
+                }, 'I'),
+                React.createElement('button', {
+                  onClick: () => insertMarkdown('`{text}`'),
+                  className: 'toolbar-btn btn-primary',
+                  title: 'Inline Code'
+                }, '`'),
 
-            // Text Formatting - Blue
-            React.createElement('button', {
-              onClick: () => insertMarkdown('**{text}**'),
-              className: 'toolbar-btn btn-primary',
-              title: 'Bold'
-            }, 'B'),
-            React.createElement('button', {
-              onClick: () => insertMarkdown('*{text}*'),
-              className: 'toolbar-btn btn-primary',
-              title: 'Italic'
-            }, 'I'),
-            React.createElement('button', {
-              onClick: () => insertMarkdown('`{text}`'),
-              className: 'toolbar-btn btn-primary',
-              title: 'Inline Code'
-            }, '`'),
+                React.createElement('div', {
+                  className: 'quick-insert-divider',
+                  'aria-hidden': true
+                }),
 
-            // Separator
-            React.createElement('span', {
-              className: 'mx-1',
-              style: { color: 'var(--border-gray)', fontSize: '12px' }
-            }, '|'),
+                // Headers - Olive
+                React.createElement('button', {
+                  onClick: () => insertMarkdown('# {text}'),
+                  className: 'toolbar-btn btn-secondary',
+                  title: 'Heading 1'
+                }, 'H1'),
+                React.createElement('button', {
+                  onClick: () => insertMarkdown('## {text}'),
+                  className: 'toolbar-btn btn-secondary',
+                  title: 'Heading 2'
+                }, 'H2'),
+                React.createElement('button', {
+                  onClick: () => insertMarkdown('### {text}'),
+                  className: 'toolbar-btn btn-secondary',
+                  title: 'Heading 3'
+                }, 'H3'),
 
-            // Headers - Olive
-            React.createElement('button', {
-              onClick: () => insertMarkdown('# {text}'),
-              className: 'toolbar-btn btn-secondary',
-              title: 'Heading 1'
-            }, 'H1'),
-            React.createElement('button', {
-              onClick: () => insertMarkdown('## {text}'),
-              className: 'toolbar-btn btn-secondary',
-              title: 'Heading 2'
-            }, 'H2'),
-            React.createElement('button', {
-              onClick: () => insertMarkdown('### {text}'),
-              className: 'toolbar-btn btn-secondary',
-              title: 'Heading 3'
-            }, 'H3'),
+                React.createElement('div', {
+                  className: 'quick-insert-divider',
+                  'aria-hidden': true
+                }),
 
-            // Separator
-            React.createElement('span', {
-              className: 'mx-1',
-              style: { color: 'var(--border-gray)', fontSize: '12px' }
-            }, '|'),
+                // Lists - Coral
+                React.createElement('button', {
+                  onClick: () => insertMarkdown('- {text}\n- \n- '),
+                  className: 'toolbar-btn btn-accent',
+                  title: 'Bullet List'
+                }, '•'),
+                React.createElement('button', {
+                  onClick: () => insertMarkdown('1. {text}\n2. \n3. '),
+                  className: 'toolbar-btn btn-accent',
+                  title: 'Numbered List'
+                }, '1.'),
+                React.createElement('button', {
+                  onClick: () => insertMarkdown('- [ ] {text}\n- [x] Completed task\n- [ ] '),
+                  className: 'toolbar-btn btn-accent',
+                  title: 'Task List'
+                }, '☑'),
 
-            // Lists - Coral
-            React.createElement('button', {
-              onClick: () => insertMarkdown('- {text}\n- \n- '),
-              className: 'toolbar-btn btn-accent',
-              title: 'Bullet List'
-            }, '•'),
-            React.createElement('button', {
-              onClick: () => insertMarkdown('1. {text}\n2. \n3. '),
-              className: 'toolbar-btn btn-accent',
-              title: 'Numbered List'
-            }, '1.'),
-            React.createElement('button', {
-              onClick: () => insertMarkdown('- [ ] {text}\n- [x] Completed task\n- [ ] '),
-              className: 'toolbar-btn btn-accent',
-              title: 'Task List'
-            }, '☑'),
+                React.createElement('div', {
+                  className: 'quick-insert-divider',
+                  'aria-hidden': true
+                }),
 
-            // Separator
-            React.createElement('span', {
-              className: 'mx-1',
-              style: { color: 'var(--border-gray)', fontSize: '12px' }
-            }, '|'),
+                // Blocks - Blue
+                React.createElement('button', {
+                  onClick: () => insertMarkdown('```\n{text}\n```'),
+                  className: 'toolbar-btn btn-primary',
+                  title: 'Code Block'
+                }, '</>'),
+                React.createElement('button', {
+                  onClick: () => insertMarkdown('> {text}\n> '),
+                  className: 'toolbar-btn btn-primary',
+                  title: 'Quote'
+                }, '>'),
 
-            // Blocks - Blue
-            React.createElement('button', {
-              onClick: () => insertMarkdown('```\n{text}\n```'),
-              className: 'toolbar-btn btn-primary',
-              title: 'Code Block'
-            }, '</>'),
-            React.createElement('button', {
-              onClick: () => insertMarkdown('> {text}\n> '),
-              className: 'toolbar-btn btn-primary',
-              title: 'Quote'
-            }, '>'),
+                React.createElement('div', {
+                  className: 'quick-insert-divider',
+                  'aria-hidden': true
+                }),
 
-            // Separator
-            React.createElement('span', {
-              className: 'mx-1',
-              style: { color: 'var(--border-gray)', fontSize: '12px' }
-            }, '|'),
+                // Structure - Olive
+                React.createElement('button', {
+                  onClick: () => insertMarkdown('---'),
+                  className: 'toolbar-btn btn-secondary',
+                  title: 'Horizontal Rule'
+                }, '—'),
+                React.createElement('button', {
+                  onClick: () => insertMarkdown('<div class="page-break-after"></div>'),
+                  className: 'toolbar-btn btn-secondary',
+                  title: 'Page Break'
+                }, '📄'),
 
-            // Structure - Olive
-            React.createElement('button', {
-              onClick: () => insertMarkdown('---'),
-              className: 'toolbar-btn btn-secondary',
-              title: 'Horizontal Rule'
-            }, '—'),
-            React.createElement('button', {
-              onClick: () => insertMarkdown('<div class="page-break-after"></div>'),
-              className: 'toolbar-btn btn-secondary',
-              title: 'Page Break'
-            }, '📄'),
+                React.createElement('div', {
+                  className: 'quick-insert-divider',
+                  'aria-hidden': true
+                }),
 
-            // Separator
-            React.createElement('span', {
-              className: 'mx-1',
-              style: { color: 'var(--border-gray)', fontSize: '12px' }
-            }, '|'),
-
-            // Insert - Coral
-            React.createElement('button', {
-              onClick: () => insertMarkdown('| Column 1 | Column 2 | Column 3 |\n|----------|----------|----------|\n| Data 1   | Data 2   | Data 3   |\n| Data 4   | Data 5   | Data 6   |'),
-              className: 'toolbar-btn btn-accent',
-              title: 'Table'
-            }, '⊞'),
-            React.createElement('button', {
-              onClick: () => insertMarkdown('[{text}](https://example.com)'),
-              className: 'toolbar-btn btn-accent',
-              title: 'Link'
-            }, '🔗'),
-            React.createElement('button', {
-              onClick: () => insertMarkdown('![{text}](https://example.com/image.jpg)'),
-              className: 'toolbar-btn btn-accent',
-              title: 'Image'
-            }, '🖼️')
-          )
-        ),
+                // Insert - Coral
+                React.createElement('button', {
+                  onClick: () => insertMarkdown('| Column 1 | Column 2 | Column 3 |\n|----------|----------|----------|\n| Data 1   | Data 2   | Data 3   |\n| Data 4   | Data 5   | Data 6   |'),
+                  className: 'toolbar-btn btn-accent',
+                  title: 'Table'
+                }, '⊞'),
+                React.createElement('button', {
+                  onClick: () => insertMarkdown('[{text}](https://example.com)'),
+                  className: 'toolbar-btn btn-accent',
+                  title: 'Link'
+                }, '🔗'),
+                React.createElement('button', {
+                  onClick: () => insertMarkdown('![{text}](https://example.com/image.jpg)'),
+                  className: 'toolbar-btn btn-accent',
+                  title: 'Image'
+                }, '🖼️')
+              )
+            )
+          ),
         React.createElement('textarea', {
           value: markdown,
           onChange: (e) => setMarkdown(e.target.value),
