@@ -418,18 +418,22 @@ function MarkdownPdfEditor() {
                     'data-tooltip': 'Bold',
                     'aria-label': 'Insert bold text'
                   }, 'B'),
-                  React.createElement('button', {
+                    React.createElement('button', {
                     onClick: () => insertMarkdown('*{text}*'),
                     className: 'toolbar-btn btn-primary',
                     'data-tooltip': 'Italic',
                     'aria-label': 'Insert italic text'
                   }, 'I'),
-                  React.createElement('button', {
+                    React.createElement('button', {
                     onClick: () => insertMarkdown('`{text}`'),
                     className: 'toolbar-btn btn-primary',
                     'data-tooltip': 'Inline Code',
                     'aria-label': 'Insert inline code'
                   }, '`'),
+                    React.createElement('span', {
+                      className: 'toolbar-divider',
+                      'aria-hidden': 'true'
+                    }, '|'),
 
                   // Headers - Olive
                   React.createElement('button', {
@@ -444,12 +448,16 @@ function MarkdownPdfEditor() {
                     'data-tooltip': 'Heading 2',
                     'aria-label': 'Insert heading level 2'
                   }, 'H2'),
-                  React.createElement('button', {
+                    React.createElement('button', {
                     onClick: () => insertMarkdown('### {text}'),
                     className: 'toolbar-btn btn-secondary',
                     'data-tooltip': 'Heading 3',
                     'aria-label': 'Insert heading level 3'
                   }, 'H3'),
+                    React.createElement('span', {
+                      className: 'toolbar-divider',
+                      'aria-hidden': 'true'
+                    }, '|'),
 
                   // Lists - Coral
                   React.createElement('button', {
@@ -464,12 +472,16 @@ function MarkdownPdfEditor() {
                     'data-tooltip': 'Numbered List',
                     'aria-label': 'Insert numbered list'
                   }, '1.'),
-                  React.createElement('button', {
+                    React.createElement('button', {
                     onClick: () => insertMarkdown('- [ ] {text}\n- [x] Completed task\n- [ ] '),
                     className: 'toolbar-btn btn-accent',
                     'data-tooltip': 'Task List',
                     'aria-label': 'Insert task list'
                   }, '☑'),
+                    React.createElement('span', {
+                      className: 'toolbar-divider',
+                      'aria-hidden': 'true'
+                    }, '|'),
 
                   // Blocks - Blue
                   React.createElement('button', {
@@ -478,12 +490,16 @@ function MarkdownPdfEditor() {
                     'data-tooltip': 'Code Block',
                     'aria-label': 'Insert code block'
                   }, '</>'),
-                  React.createElement('button', {
+                    React.createElement('button', {
                     onClick: () => insertMarkdown('> {text}\n> '),
                     className: 'toolbar-btn btn-primary',
                     'data-tooltip': 'Quote',
                     'aria-label': 'Insert quote'
                   }, '>'),
+                    React.createElement('span', {
+                      className: 'toolbar-divider',
+                      'aria-hidden': 'true'
+                    }, '|'),
 
                   // Structure - Olive
                   React.createElement('button', {
@@ -492,12 +508,16 @@ function MarkdownPdfEditor() {
                     'data-tooltip': 'Horizontal Rule',
                     'aria-label': 'Insert horizontal rule'
                   }, '—'),
-                  React.createElement('button', {
+                    React.createElement('button', {
                     onClick: () => insertMarkdown('<div class="page-break-after"></div>'),
                     className: 'toolbar-btn btn-secondary',
                     'data-tooltip': 'Page Break',
                     'aria-label': 'Insert page break'
                   }, '📄'),
+                    React.createElement('span', {
+                      className: 'toolbar-divider',
+                      'aria-hidden': 'true'
+                    }, '|'),
 
                   // Insert - Coral
                   React.createElement('button', {
