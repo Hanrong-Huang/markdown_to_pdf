@@ -405,8 +405,8 @@ function MarkdownPdfEditor() {
         ),
           // Markdown Toolbar - Morandi Style
             React.createElement('div', {
-              className: 'px-6 py-4 border-b',
-              style: { backgroundColor: 'var(--bg-cream)', borderBottomColor: 'var(--border-gray)' }
+              className: 'px-6 py-2 border-b',
+              style: { backgroundColor: 'var(--bg-cream)', borderBottomColor: '#d1cfc5' }
             },
               React.createElement('div', { className: 'quick-insert-wrapper' },
                 React.createElement('span', { className: 'quick-insert-label' }, 'QUICK INSERT'),
@@ -544,7 +544,7 @@ function MarkdownPdfEditor() {
         React.createElement('textarea', {
           value: markdown,
           onChange: (e) => setMarkdown(e.target.value),
-          className: 'flex-1 p-6 resize-none focus:outline-none font-mono text-sm',
+          className: 'flex-1 px-6 pb-6 pt-4 resize-none focus:outline-none font-mono text-sm',
           style: { backgroundColor: '#faf9f5', color: '#141413', caretColor: '#d97757' },
           placeholder: 'Type your markdown here...'
         })
