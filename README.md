@@ -1,36 +1,42 @@
-# Markdown to PDF Editor
+# MarkFlow — Markdown to PDF
 
-A simple web-based tool for converting Markdown to beautifully styled PDFs.
+A sleek, browser-based markdown editor with real-time PDF preview and high-resolution export.
+
+**[Live Demo](https://hanrong-huang.github.io/markdown_to_pdf/)**
 
 ## Features
 
-- **Live Preview**: See your formatted markdown in real-time
-- **PDF Export**: Download styled PDFs with proper formatting
-- **File Support**: Upload and download markdown files
-- **Styled Output**: Properly formatted code blocks, tables, lists, and more
+- **Live Preview** — See rendered markdown instantly as you type
+- **Page Break Indicators** — Visual guides showing where pages will split in PDF
+- **High-DPI Export** — 384 DPI PDF output for crisp, print-ready documents
+- **Formatting Toolbar** — Quick buttons for headings, bold, italic, lists, code, tables, and more
+- **Keyboard Shortcuts** — Ctrl+B (bold), Ctrl+I (italic), Ctrl+K (link), Ctrl+S (export)
+- **File Upload** — Import existing `.md` files
+- **Dark Theme** — Easy on the eyes with amber accents
 
 ## Usage
 
-Visit the live demo: [https://hanrong-huang.github.io/markdown_to_pdf/](https://hanrong-huang.github.io/markdown_to_pdf/)
+1. Visit the [live demo](https://hanrong-huang.github.io/markdown_to_pdf/)
+2. Write or paste markdown in the left panel
+3. Preview renders in real-time on the right
+4. Click **Download PDF** to export
 
-Or run locally:
-1. Clone this repository
-2. Open `index.html` in your browser
+## Run Locally
 
-## Customization
-
-Edit color variables in `styles.css`:
-
-```css
-:root {
-  --bg-cream: #f5f1e8;
-  --text-dark: #2c2c2c;
-  --primary-purple: #8b5cf6;
-  --secondary-green: #10b981;
-  --accent-blue: #3b82f6;
-}
+```bash
+git clone https://github.com/Hanrong-Huang/markdown_to_pdf.git
+cd markdown_to_pdf
+# Open index.html in your browser
 ```
 
-## Repository
+No build step required — it's a single HTML file with embedded CSS and JavaScript.
 
-GitHub: [https://github.com/Hanrong-Huang/markdown_to_pdf](https://github.com/Hanrong-Huang/markdown_to_pdf)
+## Tech Stack
+
+- [Marked.js](https://marked.js.org/) — Markdown parsing
+- [html2pdf.js](https://ekoopmans.github.io/html2pdf.js/) — PDF generation
+- Vanilla JavaScript, CSS3
+
+## License
+
+MIT

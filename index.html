@@ -1,38 +1,1124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Markdown to PDF Editor</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarkFlow — Markdown to PDF</title>
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap" rel="stylesheet">
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-  <!-- Custom Styles -->
-  <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            /* Dark Artisan Color Palette */
+            --bg-deep: #0d0d0f;
+            --bg-panel: #141416;
+            --bg-elevated: #1a1a1e;
+            --bg-hover: #242428;
 
-  <!-- React & ReactDOM -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+            /* Amber Accent System */
+            --accent-primary: #f5a623;
+            --accent-glow: rgba(245, 166, 35, 0.15);
+            --accent-bright: #ffc94d;
+            --accent-muted: #c4840f;
 
-  <!-- Marked.js for Markdown parsing -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+            /* Text Hierarchy */
+            --text-primary: #f5f5f7;
+            --text-secondary: #a1a1a6;
+            --text-muted: #6e6e73;
 
-  <!-- html2canvas for rendering -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+            /* Borders & Dividers */
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-accent: rgba(245, 166, 35, 0.3);
 
-  <!-- jsPDF for PDF generation -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+
+            /* Transitions */
+            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Noise Texture Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* App Container */
+        .app {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-md) var(--space-lg);
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border-subtle);
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-muted));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--bg-deep);
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            color: var(--accent-primary);
+        }
+
+        /* Header Actions */
+        .header-actions {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            border: none;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1));
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+
+        .btn:hover::before {
+            opacity: 1;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .btn-ghost:hover {
+            color: var(--text-primary);
+            border-color: var(--border-accent);
+            background: var(--bg-hover);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-muted));
+            color: var(--bg-deep);
+            box-shadow: 0 2px 8px var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 16px var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Panels */
+        .panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .panel-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+        }
+
+        .panel-title .dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            margin-right: var(--space-sm);
+            box-shadow: 0 0 8px var(--accent-primary);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            gap: 2px;
+            padding: var(--space-xs);
+            background: var(--bg-panel);
+            border-radius: 6px;
+        }
+
+        .toolbar-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            border-radius: 4px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .toolbar-btn:hover {
+            background: var(--bg-hover);
+            color: var(--accent-primary);
+        }
+
+        .toolbar-btn:active {
+            transform: scale(0.95);
+        }
+
+        .toolbar-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .toolbar-divider {
+            width: 1px;
+            height: 20px;
+            background: var(--border-subtle);
+            margin: 4px var(--space-xs);
+        }
+
+        /* Editor Panel */
+        .editor-panel {
+            background: var(--bg-panel);
+        }
+
+        .editor-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .editor {
+            width: 100%;
+            height: 100%;
+            padding: var(--space-lg);
+            background: transparent;
+            border: none;
+            outline: none;
+            resize: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            caret-color: var(--accent-primary);
+        }
+
+        .editor::placeholder {
+            color: var(--text-muted);
+        }
+
+        .editor::selection {
+            background: var(--accent-glow);
+        }
+
+        /* Line Numbers Gutter Effect */
+        .editor-container::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 48px;
+            background: linear-gradient(90deg, var(--bg-elevated), transparent);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* Divider */
+        .divider {
+            width: 1px;
+            background: var(--border-subtle);
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 3px;
+            height: 60px;
+            background: linear-gradient(180deg, transparent, var(--accent-primary), transparent);
+            border-radius: 2px;
+            opacity: 0.6;
+        }
+
+        /* Preview Panel */
+        .preview-panel {
+            background: var(--bg-deep);
+        }
+
+        .preview-container {
+            flex: 1;
+            overflow: auto;
+            padding: var(--space-lg);
+        }
+
+        .preview-content {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #ffffff;
+            color: #1a1a1a;
+            padding: var(--space-xl) 48px;
+            border-radius: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            min-height: 100%;
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        /* Preview Typography */
+        .preview-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f5a623;
+            color: #0d0d0f;
+        }
+
+        .preview-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 16px;
+            color: #1a1a1e;
+        }
+
+        .preview-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            color: #242428;
+        }
+
+        .preview-content p {
+            margin-bottom: 16px;
+        }
+
+        .preview-content strong {
+            font-weight: 600;
+            color: #0d0d0f;
+        }
+
+        .preview-content em {
+            font-style: italic;
+        }
+
+        .preview-content code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            background: #f4f4f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #c4840f;
+        }
+
+        .preview-content pre {
+            background: #1a1a1e;
+            color: #f5f5f7;
+            padding: 16px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        .preview-content pre code {
+            background: transparent;
+            padding: 0;
+            color: inherit;
+        }
+
+        .preview-content blockquote {
+            border-left: 3px solid #f5a623;
+            margin: 16px 0;
+            padding-left: 16px;
+            color: #6e6e73;
+            font-style: italic;
+        }
+
+        .preview-content ul, .preview-content ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .preview-content li {
+            margin-bottom: 8px;
+        }
+
+        .preview-content a {
+            color: #c4840f;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .preview-content hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e5e5e5, transparent);
+            margin: 32px 0;
+        }
+
+        .preview-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        .preview-content th, .preview-content td {
+            border: 1px solid #e5e5e5;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .preview-content th {
+            background: #f4f4f5;
+            font-weight: 600;
+        }
+
+        .preview-content img {
+            max-width: 100%;
+            border-radius: 4px;
+        }
+
+        /* Page Break Indicators */
+        .page-break-indicator {
+            position: relative;
+            width: calc(100% + 96px);
+            margin-left: -48px;
+            margin-top: 24px;
+            margin-bottom: 24px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .page-break-indicator::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 2px;
+            background: repeating-linear-gradient(
+                90deg,
+                #f5a623 0px,
+                #f5a623 8px,
+                transparent 8px,
+                transparent 16px
+            );
+            opacity: 0.7;
+        }
+
+        .page-break-label {
+            background: #fff;
+            padding: 4px 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #f5a623;
+            border: 1px solid rgba(245, 166, 35, 0.3);
+            border-radius: 4px;
+            z-index: 1;
+            box-shadow: 0 2px 8px rgba(245, 166, 35, 0.1);
+        }
+
+        .page-break-label .page-num {
+            color: #c4840f;
+        }
+
+        /* Page counter in status bar */
+        .page-count {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .page-count svg {
+            width: 12px;
+            height: 12px;
+            opacity: 0.6;
+        }
+
+        /* File Input (Hidden) */
+        .file-input {
+            display: none;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: var(--space-md) var(--space-lg);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-accent);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--text-primary);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all var(--transition-smooth);
+            z-index: 100;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-success {
+            border-color: #22c55e;
+        }
+
+        .toast-success::before {
+            content: '✓';
+            margin-right: var(--space-sm);
+            color: #22c55e;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-xs) var(--space-md);
+            background: var(--bg-elevated);
+            border-top: 1px solid var(--border-subtle);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main {
+                flex-direction: column;
+            }
+
+            .divider {
+                width: 100%;
+                height: 1px;
+            }
+
+            .divider::before {
+                width: 60px;
+                height: 3px;
+            }
+
+            .header {
+                flex-wrap: wrap;
+                gap: var(--space-md);
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-panel);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-hover);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Loading Animation */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .loading {
+            background: linear-gradient(90deg, var(--bg-elevated), var(--bg-hover), var(--bg-elevated));
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+    </style>
 </head>
 <body>
-  <div id="root"></div>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">M</div>
+                <div class="logo-text">Mark<span>Flow</span></div>
+            </div>
 
-  <!-- App JavaScript -->
-  <script src="app.js"></script>
+            <div class="header-actions">
+                <input type="file" id="fileInput" class="file-input" accept=".md,.txt,.markdown">
+                <button class="btn btn-ghost" onclick="document.getElementById('fileInput').click()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    Upload .md
+                </button>
+                <button class="btn btn-primary" onclick="downloadPDF()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download PDF
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Editor Panel -->
+            <section class="panel editor-panel">
+                <div class="panel-header">
+                    <div class="panel-title"><span class="dot"></span>Markdown</div>
+                    <div class="toolbar">
+                        <button class="toolbar-btn" onclick="insertText('# ', '')" title="Heading 1">H1</button>
+                        <button class="toolbar-btn" onclick="insertText('## ', '')" title="Heading 2">H2</button>
+                        <button class="toolbar-btn" onclick="insertText('### ', '')" title="Heading 3">H3</button>
+                        <div class="toolbar-divider"></div>
+                        <button class="toolbar-btn" onclick="insertText('**', '**')" title="Bold">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/></svg>
+                        </button>
+                        <button class="toolbar-btn" onclick="insertText('*', '*')" title="Italic">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4h4l-4 16H6l4-16z"/></svg>
+                        </button>
+                        <button class="toolbar-btn" onclick="insertText('~~', '~~')" title="Strikethrough">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="12" x2="20" y2="12"/><path d="M17.5 7.5c-1-1.5-3-2.5-5.5-2.5s-5 1.5-5 4c0 4 10 4 10 8 0 2.5-3.5 4-6 4s-4.5-1-5.5-2.5"/></svg>
+                        </button>
+                        <div class="toolbar-divider"></div>
+                        <button class="toolbar-btn" onclick="insertText('\n- ', '')" title="Bullet List">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="2" fill="currentColor"/><circle cx="4" cy="12" r="2" fill="currentColor"/><circle cx="4" cy="18" r="2" fill="currentColor"/></svg>
+                        </button>
+                        <button class="toolbar-btn" onclick="insertText('\n1. ', '')" title="Numbered List">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><text x="3" y="8" font-size="8" fill="currentColor">1</text><text x="3" y="14" font-size="8" fill="currentColor">2</text><text x="3" y="20" font-size="8" fill="currentColor">3</text></svg>
+                        </button>
+                        <button class="toolbar-btn" onclick="insertText('\n> ', '')" title="Quote">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 8H6a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2v2a2 2 0 0 1-2 2H5v2h1a4 4 0 0 0 4-4V8zm10 0h-4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2v2a2 2 0 0 1-2 2h-1v2h1a4 4 0 0 0 4-4V8z"/></svg>
+                        </button>
+                        <div class="toolbar-divider"></div>
+                        <button class="toolbar-btn" onclick="insertText('`', '`')" title="Inline Code">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                        </button>
+                        <button class="toolbar-btn" onclick="insertText('\n```\n', '\n```\n')" title="Code Block">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 10l4 4-4 4"/><line x1="14" y1="18" x2="18" y2="18"/></svg>
+                        </button>
+                        <div class="toolbar-divider"></div>
+                        <button class="toolbar-btn" onclick="insertText('[', '](url)')" title="Link">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        </button>
+                        <button class="toolbar-btn" onclick="insertText('![alt](', ')')" title="Image">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        </button>
+                        <button class="toolbar-btn" onclick="insertText('\n---\n', '')" title="Horizontal Rule">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/></svg>
+                        </button>
+                        <div class="toolbar-divider"></div>
+                        <button class="toolbar-btn" onclick="insertTable()" title="Table">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="editor-container">
+                    <textarea id="editor" class="editor" placeholder="Start writing your markdown here...
+
+# Welcome to MarkFlow
+
+Type or paste your **markdown** content and watch it transform into a beautiful PDF.
+
+## Features
+- Real-time preview
+- Professional styling
+- One-click PDF export"></textarea>
+                </div>
+            </section>
+
+            <!-- Divider -->
+            <div class="divider"></div>
+
+            <!-- Preview Panel -->
+            <section class="panel preview-panel">
+                <div class="panel-header">
+                    <div class="panel-title"><span class="dot"></span>Preview</div>
+                    <div class="toolbar">
+                        <button class="toolbar-btn" onclick="zoomOut()" title="Zoom Out">−</button>
+                        <button class="toolbar-btn" id="zoomLevel" style="width: auto; padding: 0 8px;">100%</button>
+                        <button class="toolbar-btn" onclick="zoomIn()" title="Zoom In">+</button>
+                    </div>
+                </div>
+                <div class="preview-container">
+                    <div id="preview" class="preview-content"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Status Bar -->
+        <footer class="status-bar">
+            <div class="status-item">
+                <span id="wordCount">0 words</span>
+                <span>•</span>
+                <span id="charCount">0 characters</span>
+            </div>
+            <div class="status-item">
+                <span class="page-count">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                    <span id="pageCount">1 page</span>
+                </span>
+                <span>•</span>
+                <span>Markdown</span>
+                <span>•</span>
+                <span>UTF-8</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // Elements
+        const editor = document.getElementById('editor');
+        const preview = document.getElementById('preview');
+        const fileInput = document.getElementById('fileInput');
+        const wordCountEl = document.getElementById('wordCount');
+        const charCountEl = document.getElementById('charCount');
+        const pageCountEl = document.getElementById('pageCount');
+        const zoomLevelEl = document.getElementById('zoomLevel');
+        const toast = document.getElementById('toast');
+
+        // State
+        let zoomLevel = 100;
+
+        // Page dimensions (US Letter: 8.5" x 11" at 96 DPI)
+        // Content area: 11" - 0.75" top - 0.75" bottom = 9.5" = 912px
+        // Account for preview padding (32px top + 32px bottom = 64px)
+        const PAGE_HEIGHT_PX = 912 - 64; // ~848px of content per page
+
+        // Initialize marked
+        marked.setOptions({
+            breaks: true,
+            gfm: true,
+            headerIds: false,
+            mangle: false
+        });
+
+        // Update preview on input
+        editor.addEventListener('input', updatePreview);
+
+        function updatePreview() {
+            const markdown = editor.value;
+            preview.innerHTML = marked.parse(markdown);
+            updateCounts();
+            // Delay page break calculation to allow DOM to render
+            requestAnimationFrame(() => {
+                calculatePageBreaks();
+            });
+        }
+
+        // Calculate and insert page break indicators
+        function calculatePageBreaks() {
+            // Remove existing page break indicators
+            const existingBreaks = preview.querySelectorAll('.page-break-indicator');
+            existingBreaks.forEach(el => el.remove());
+
+            const contentHeight = preview.scrollHeight;
+            const numPages = Math.ceil(contentHeight / PAGE_HEIGHT_PX);
+
+            // Update page count in status bar
+            pageCountEl.textContent = `${numPages} page${numPages !== 1 ? 's' : ''}`;
+
+            // Insert page break indicators
+            if (numPages > 1) {
+                // Get all block-level elements in preview
+                const blocks = preview.querySelectorAll('h1, h2, h3, h4, h5, h6, p, pre, blockquote, ul, ol, table, hr');
+
+                for (let page = 1; page < numPages; page++) {
+                    const breakPosition = page * PAGE_HEIGHT_PX;
+
+                    // Find the element closest to this break position
+                    let closestElement = null;
+                    let closestDistance = Infinity;
+
+                    blocks.forEach(block => {
+                        const rect = block.getBoundingClientRect();
+                        const previewRect = preview.getBoundingClientRect();
+                        const elementTop = rect.top - previewRect.top + preview.scrollTop;
+
+                        const distance = Math.abs(elementTop - breakPosition);
+                        if (distance < closestDistance && elementTop > (page - 1) * PAGE_HEIGHT_PX + 100) {
+                            closestDistance = distance;
+                            closestElement = block;
+                        }
+                    });
+
+                    // Create page break indicator
+                    const indicator = document.createElement('div');
+                    indicator.className = 'page-break-indicator';
+                    indicator.innerHTML = `<span class="page-break-label">Page <span class="page-num">${page}</span> ends</span>`;
+
+                    if (closestElement) {
+                        closestElement.parentNode.insertBefore(indicator, closestElement);
+                    }
+                }
+            }
+        }
+
+        function updateCounts() {
+            const text = editor.value;
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            const chars = text.length;
+            wordCountEl.textContent = `${words} word${words !== 1 ? 's' : ''}`;
+            charCountEl.textContent = `${chars} character${chars !== 1 ? 's' : ''}`;
+        }
+
+        // Insert text at cursor
+        function insertText(before, after) {
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const selected = editor.value.substring(start, end);
+            const newText = before + selected + after;
+
+            editor.setRangeText(newText, start, end, 'end');
+            editor.focus();
+
+            // Position cursor appropriately
+            if (selected.length === 0) {
+                editor.selectionStart = editor.selectionEnd = start + before.length;
+            }
+
+            updatePreview();
+        }
+
+        // Insert table
+        function insertTable() {
+            const table = `
+| Header 1 | Header 2 | Header 3 |
+|----------|----------|----------|
+| Cell 1   | Cell 2   | Cell 3   |
+| Cell 4   | Cell 5   | Cell 6   |
+`;
+            insertText(table, '');
+        }
+
+        // File upload
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    editor.value = event.target.result;
+                    updatePreview();
+                    showToast('File loaded successfully', 'success');
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // Download PDF
+        async function downloadPDF() {
+            const element = preview;
+
+            // Hide page break indicators during PDF generation
+            const pageBreaks = preview.querySelectorAll('.page-break-indicator');
+            pageBreaks.forEach(el => el.style.display = 'none');
+
+            const opt = {
+                margin: [0.75, 0.75, 0.75, 0.75],
+                filename: 'document.pdf',
+                image: { type: 'png', quality: 1.0 },
+                html2canvas: {
+                    scale: 4,  // High DPI: 4x = ~384 DPI for crisp output
+                    useCORS: true,
+                    letterRendering: true,
+                    logging: false,
+                    imageTimeout: 0
+                },
+                jsPDF: {
+                    unit: 'in',
+                    format: 'letter',
+                    orientation: 'portrait',
+                    compress: true
+                },
+                pagebreak: {
+                    mode: ['avoid-all', 'css', 'legacy'],
+                    before: '.page-break-before',
+                    after: '.page-break-after',
+                    avoid: ['pre', 'blockquote', 'table', 'img']
+                }
+            };
+
+            showToast('Generating high-resolution PDF...', '');
+
+            try {
+                await html2pdf().set(opt).from(element).save();
+                showToast('PDF downloaded successfully (384 DPI)', 'success');
+            } catch (error) {
+                showToast('Error generating PDF', '');
+                console.error(error);
+            } finally {
+                // Restore page break indicators
+                pageBreaks.forEach(el => el.style.display = '');
+            }
+        }
+
+        // Zoom controls
+        function zoomIn() {
+            if (zoomLevel < 150) {
+                zoomLevel += 10;
+                updateZoom();
+            }
+        }
+
+        function zoomOut() {
+            if (zoomLevel > 50) {
+                zoomLevel -= 10;
+                updateZoom();
+            }
+        }
+
+        function updateZoom() {
+            preview.style.transform = `scale(${zoomLevel / 100})`;
+            preview.style.transformOrigin = 'top center';
+            zoomLevelEl.textContent = `${zoomLevel}%`;
+            // Recalculate page breaks after zoom change
+            setTimeout(calculatePageBreaks, 100);
+        }
+
+        // Recalculate page breaks on window resize
+        window.addEventListener('resize', () => {
+            requestAnimationFrame(calculatePageBreaks);
+        });
+
+        // Toast notification
+        function showToast(message, type) {
+            toast.textContent = message;
+            toast.className = `toast show ${type === 'success' ? 'toast-success' : ''}`;
+
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 3000);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key.toLowerCase()) {
+                    case 'b':
+                        e.preventDefault();
+                        insertText('**', '**');
+                        break;
+                    case 'i':
+                        e.preventDefault();
+                        insertText('*', '*');
+                        break;
+                    case 'k':
+                        e.preventDefault();
+                        insertText('[', '](url)');
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        downloadPDF();
+                        break;
+                }
+            }
+        });
+
+        // Initial sample content (2 pages to demonstrate page breaks)
+        editor.value = `# Welcome to MarkFlow
+
+Transform your markdown into beautifully formatted PDFs with ease. This editor provides real-time preview with **page break indicators** so you know exactly where your content will split across pages.
+
+## Getting Started
+
+Simply start typing in this editor and watch your content come alive in the preview panel. When you're ready, click **Download PDF** to export your document at high resolution (384 DPI).
+
+### Key Features
+
+- **Real-time Preview** — See your changes instantly
+- **Page Break Indicators** — Visual guides showing where pages end
+- **High-DPI Export** — Crystal clear PDFs at 384 DPI
+- **Smart Formatting** — Professional typography out of the box
+- **Keyboard Shortcuts** — Ctrl+B for bold, Ctrl+I for italic
+- **File Upload** — Import existing .md files
+
+## Example Content
+
+Here's what your markdown can look like:
+
+> "The best way to predict the future is to create it." — Peter Drucker
+
+### Code Example
+
+\`\`\`javascript
+function greet(name) {
+    return \`Hello, \${name}!\`;
+}
+\`\`\`
+
+### Table Example
+
+| Feature | Status | Priority |
+|---------|--------|----------|
+| Export PDF | ✓ Done | High |
+| Page Breaks | ✓ Done | High |
+| High DPI | ✓ Done | Medium |
+
+---
+
+## Page Break Demo
+
+This section pushes content to a second page. The amber dashed line above shows where **Page 1 ends**. This helps you visualize exactly how your document will be split when exported to PDF.
+
+### Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| Ctrl+B | Bold text |
+| Ctrl+I | Italic text |
+| Ctrl+K | Insert link |
+| Ctrl+S | Download PDF |
+
+---
+
+*Start writing and create something amazing!*`;
+
+        // Initialize
+        updatePreview();
+    </script>
 </body>
 </html>
